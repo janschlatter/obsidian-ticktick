@@ -2,11 +2,11 @@ import { App, MarkdownView, Notice, Platform, Plugin } from 'obsidian';
 import type { PluginManifest } from 'obsidian';
 
 import { CreateTaskModal } from './modal';
+import { generateTikTickCreateTaskTitleQuick, generateTikTickCreateTaskURL } from './model';
+import type { Task } from './model';
 import { TickTickPluginSettingTab } from './setting';
 import type { TickTickPluginSettings } from './setting';
 import { DEFAULT_SETTINGS } from './setting';
-import { generateTikTickCreateTaskTitleQuick, generateTikTickCreateTaskURL } from './model';
-import type { Task } from './model';
 
 export default class TickTickPlugin extends Plugin {
   settings: TickTickPluginSettings;
@@ -60,7 +60,13 @@ export default class TickTickPlugin extends Plugin {
             }
             // call generateTikTickCreateTaskURL
             const task: Task = {
-              title: generateTikTickCreateTaskTitleQuick(file.basename, file.path, this.app.vault.getName(), this.settings.prependText, this.settings.appendText),
+              title: generateTikTickCreateTaskTitleQuick(
+                file.basename,
+                file.path,
+                this.app.vault.getName(),
+                this.settings.prependText,
+                this.settings.appendText,
+              ),
               content: view.editor.getSelection(),
               list: this.settings.defaultList,
               tags: this.settings.defaultTags,

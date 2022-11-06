@@ -41,7 +41,13 @@ export const generateTikTickCreateTaskTitle = (title: string, filePath: string, 
   return `[${title}](${url})`;
 };
 
-export const generateTikTickCreateTaskTitleQuick = (title: string, filePath: string, vault: string, prependText: string, appendText: string): string => {
+export const generateTikTickCreateTaskTitleQuick = (
+  title: string,
+  filePath: string,
+  vault: string,
+  prependText: string,
+  appendText: string,
+): string => {
   const url = `obsidian://open?vault=${encodeURIComponent(vault)}&file=${encodeURIComponent(filePath)}`;
 
   return `${prependText}[${title}](${url})${appendText}`;
