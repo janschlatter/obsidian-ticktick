@@ -4,6 +4,9 @@ export interface Task {
   content: string;
   list?: string;
   tags?: string;
+  priority?: string;
+  appendText?: string;
+  prependText?: string;
 }
 
 export const generateTikTickCreateTaskURL = (task: Task): string => {
@@ -22,6 +25,10 @@ export const generateTikTickCreateTaskURL = (task: Task): string => {
     url += `&tags=${encodeURIComponent(task.tags)}`;
   }
 
+  // add priority
+  if (task.priority) {
+    url += `&priority=${encodeURIComponent(task.priority)}`;
+  }
   // TODO: doesn't work
   url += `&x-success=${encodeURIComponent(`obsidian://ticktick`)}`;
 
@@ -32,4 +39,10 @@ export const generateTikTickCreateTaskTitle = (title: string, filePath: string, 
   const url = `obsidian://open?vault=${encodeURIComponent(vault)}&file=${encodeURIComponent(filePath)}`;
 
   return `[${title}](${url})`;
+};
+
+export const generateTikTickCreateTaskTitleQuick = (title: string, filePath: string, vault: string, prependText: string, appendText: string): string => {
+  const url = `obsidian://open?vault=${encodeURIComponent(vault)}&file=${encodeURIComponent(filePath)}`;
+
+  return `${prependText}[${title}](${url})${appendText}`;
 };

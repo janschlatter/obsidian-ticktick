@@ -5,6 +5,8 @@ import { CreateTaskModal } from './modal';
 import { TickTickPluginSettingTab } from './setting';
 import type { TickTickPluginSettings } from './setting';
 import { DEFAULT_SETTINGS } from './setting';
+import { generateTikTickCreateTaskTitleQuick, generateTikTickCreateTaskURL } from './model';
+import type { Task } from './model';
 
 export default class TickTickPlugin extends Plugin {
   settings: TickTickPluginSettings;
@@ -40,6 +42,42 @@ export default class TickTickPlugin extends Plugin {
         return false;
       },
       hotkeys: [{ modifiers: ['Meta'], key: 't' }],
+    });
+
+    this.addCommand({
+      id: 'create-task-quick',
+      name: 'Quick Add a Task based on a Preset',
+      checkCallback: (checking: boolean) => {
+        const file = this.app.workspace.getActiveFile();
+        const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+        const isMacOS = Platform.isDesktop && Platform.isMacOS;
+
+        if (file && view) {
+          if (!checking) {
+            if (!isMacOS) {
+              new Notice('Error: Unsupported platform');
+              return;
+            }
+            // call generateTikTickCreateTaskURL
+            const task: Task = {
+              title: generateTikTickCreateTaskTitleQuick(file.basename, file.path, this.app.vault.getName(), this.settings.prependText, this.settings.appendText),
+              content: view.editor.getSelection(),
+              list: this.settings.defaultList,
+              tags: this.settings.defaultTags,
+              priority: this.settings.defaultPriority,
+              prependText: this.settings.prependText,
+              appendText: this.settings.appendText,
+            };
+            const url = generateTikTickCreateTaskURL(task);
+            console.debug('create TickTick Task:', url);
+            window.open(url);
+          }
+          return true;
+        }
+
+        return false;
+      },
+      hotkeys: [{ modifiers: ['Meta'], key: '5' }],
     });
 
     this.registerObsidianProtocolHandler('ticktick', (params) => {

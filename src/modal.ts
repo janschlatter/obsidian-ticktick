@@ -18,6 +18,7 @@ export class CreateTaskModal extends Modal {
       content,
       list: settings.defaultList,
       tags: settings.defaultTags,
+      priority: settings.defaultPriority,
     };
   }
 
